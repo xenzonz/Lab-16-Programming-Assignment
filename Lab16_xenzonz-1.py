@@ -1,6 +1,6 @@
 """
 Docstring for Lab16_xenzonz-1.py
-i. Lab 15: Plot Ohio Unemployment Data
+i. Lab 16: Plot Ohio Unemployment Data
 ii. Sam Cocquyt
 iii. Read Ohio unemployment data from OHUR.csv, parse the dates and unemployment
         rates, and create a time-series line plot saved as an image file.
@@ -14,22 +14,41 @@ import csv
 from datetime import datetime
 import matplotlib.pyplot as plt
 
-def read_data(filename):
+def read_data(filename: str) -> tuple[list[datetime], list[float]]:
+    """
+    Read dates and numeric values from a CSV file.
 
-    dates = []
-    unemployment_rates = []
+    The CSV file should contain a header row followed by rows of data.
+    The first column should contain dates in YYYY-MM-DD format, and the
+    second column should contain numeric values.
+
+    Args:
+        filename: The name of the CSV file to read.
+
+    Returns:
+        A tuple containing:
+        - A list of datetime objects.
+        - A list of float values.
+
+    Notes:
+        Rows with invalid dates or values are skipped.
+    """
+
+    dates: list[datetime] = []
+    unemployment_rates: list[float] = []
+
 
     with open(filename, "r", newline="") as file:
-        reader = csv.reader(file)
+        reader: csv.reader = csv.reader(file)
 
-        header_row = next(reader)
+        header_row: list[str] = next(reader)
         for index, column_header in enumerate(header_row):
             print(index, column_header)
 
         for row_number, row in enumerate(reader, start=2):
             try:
-                current_date = datetime.strptime(row[0], "%Y-%m-%d")
-                unemployment_rate = float(row[1])
+                current_date: datetime = datetime.strptime(row[0], "%Y-%m-%d")
+                unemployment_rate: float = float(row[1])
             except ValueError:
                 print(f"Skipping row {row_number}: could not convert data.")
             else:
@@ -39,7 +58,27 @@ def read_data(filename):
     return dates, unemployment_rates
 
 
-def create_plot(dates, values, title, y_label, output_filename):
+def create_plot(
+    dates: list[datetime],
+    values: list[float],
+    title: str,
+    y_label: str,
+    output_filename: str
+) -> None:
+    
+    """
+    Create and save a line plot using the provided dates and values.
+
+    Args:
+        dates: A list of datetime objects used for the x-axis.
+        values: A list of numeric values used for the y-axis.
+        title: The title displayed at the top of the graph.
+        y_label: The label displayed on the y-axis.
+        output_filename: The name of the image file where the graph is saved.
+
+    Returns:
+        None
+    """
     plt.style.use("seaborn-v0_8")
 
     plt.figure(figsize=(12, 7))
@@ -57,7 +96,16 @@ def create_plot(dates, values, title, y_label, output_filename):
 
     
 
-def main():
+def main()-> None:
+    """
+    Run the program.
+
+    This function reads the unemployment and gold volatility CSV files,
+    then creates and saves one graph for each dataset.
+
+    Returns:
+        None
+    """
 
     filename = "OHUR.csv"
     dates, unemployment_rates = read_data(filename)
