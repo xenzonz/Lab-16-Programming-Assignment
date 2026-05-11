@@ -39,28 +39,48 @@ def read_data(filename):
     return dates, unemployment_rates
 
 
-def create_plot(dates, unemployment_rates):
-    plt.style.use("fivethirtyeight")
-    plt.figure(figsize=(12, 7))
-    plt.plot(dates, unemployment_rates, color="red")
+def create_plot(dates, values, title, y_label, output_filename):
+    plt.style.use("seaborn-v0_8")
 
-    plt.title("Ohio Unemployment (by Month): 1976 - 2022", fontsize=24)
+    plt.figure(figsize=(12, 7))
+    plt.plot(dates, values)
+
+    plt.title(title, fontsize=24)
     plt.xlabel("Date", fontsize=14)
-    plt.ylabel("Unemp Rate", fontsize=14)
+    plt.ylabel(y_label, fontsize=14)
 
     plt.grid(True)
     plt.tight_layout()
-
-    plt.savefig("ohio_unemployment.png")
+    plt.savefig(output_filename)
 
 
 
     
 
 def main():
+
     filename = "OHUR.csv"
     dates, unemployment_rates = read_data(filename)
-    create_plot(dates, unemployment_rates)
+
+
+    create_plot(
+        dates,
+        unemployment_rates,
+        "Ohio Unemployment (by Month): 1976 - 2022",
+        "Unemp Rate",
+        "ohio_unemployment.png"
+    )
+
+    gold_filename = "GVZCLS.csv"
+    gold_dates, gold_values = read_data(gold_filename)
+
+    create_plot(
+        gold_dates,
+        gold_values,
+        "Gold Volatility Index",
+        "GVZCLS",
+        "gold_volatility.png"
+    )
 
 
 if __name__ == "__main__":
